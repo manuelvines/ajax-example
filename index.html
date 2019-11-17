@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Enviar y recibir información con AJAX</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <h1 class="text-center">Enviar y recibir información con AJAX</h1>
+
+            </div>
+
+        </div>
+
+        <div class="row" id="list-products">
+
+
+        </div>
+
+    </div>
+
+
+
+
+    <script src="assets/js/jquery-3.4.1.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            $.ajax({
+                url: "http://localhost/test/ajax/backend/producto.php",
+                type: "GET", // podría ser get, post, put o delete.
+                data: {}, // datos a pasar al servidor, en caso de necesitarlo
+                dataType: 'JSON',
+                beforeSend: function() {
+
+                    $("#list-products").html("cargando...");
+
+
+                },
+                success: function($data) {
+                    //param optional
+
+
+                    $("#list-products").html("");
+
+                    for ($i = 0; $i < $data.length; $i++) {
+
+
+                        $("#list-products").append("<div class='col-md-4'>" + "<img src='assets/img/" + $data[$i].image + "'><p>" + $data[$i].name + "</p></div>");
+
+                    }
+
+                },
+                error: function(jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                    }
+                    alert(msg);
+                },
+            })
+
+        });
+    </script>
+</body>
+
+</html>
